@@ -33,6 +33,12 @@ jobs:
       - name: Launch Web Service
         run: docker compose up -d
 
+      # wait until web server is up to avoid a race with playwright tests
+      # give up after 5 minutes if web server never comes up
+      - name: Wait for Web Service to Launch
+        run: sh wait-for-webserver.sh
+        timeout-minutes: 5
+
       - name: Run Playwright Tests
         run: npx playwright test --project=chromium
 
